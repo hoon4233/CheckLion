@@ -127,9 +127,11 @@ const Sidebar = ({ name, width, height, login, children  }) => {
         <FontAwesomeIcon 
         onClick={() => toggleMenu()}
         icon={faBars} />
-        <LogoContainer>
-        <img src={logoimg} alt="logo" width='180'/>
-        </LogoContainer>
+        <Link to={'/home'}>
+          <LogoContainer>
+            <img src={logoimg} alt="logo" width='180'/>
+          </LogoContainer>
+        </Link>
       </div>
         </Header>
     <Container className="Background" >
