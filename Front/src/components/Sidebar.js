@@ -5,6 +5,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faBars, faSignOutAlt} from "@fortawesome/free-solid-svg-icons";
 import logoimg from '../styles/images/logo.png';
 import {logoutApi} from "../apis/AuthApi";
+import {checkLogin} from "../modules/auth";
 
 
 const Header = styled.div`
@@ -102,11 +103,7 @@ const Sidebar = ({name, width, height, children}) => {
     };
 
     const checkToken = () => {
-        if (!localStorage.getItem("checkLionAuth")) {
-            setIsLogIn(false)
-        } else {
-            setIsLogIn(true);
-        }
+        setIsLogIn(checkLogin());
     }
 
     React.useEffect(() => {
@@ -158,7 +155,7 @@ const Sidebar = ({name, width, height, children}) => {
                         {
                             isLogIn ?
                                 <Menu>
-                                    <MenuList onClick={handleLogout}>Logout</MenuList>
+                                    <MenuList style ={{cursor:'pointer'}} onClick={handleLogout}>Logout</MenuList>
                                 </Menu>
                                 : <Menu>
                                     <Link to="/login"><MenuList>Login</MenuList></Link>

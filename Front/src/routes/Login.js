@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import logo from '../logo.png';
 import {logInApi} from "../apis/AuthApi";
 import {CircularProgress} from "@material-ui/core";
+import {checkLogin} from "../modules/auth";
 
 const Container = styled.div`
   width: 100%;
@@ -110,11 +111,7 @@ function Login(props) {
 
 
     const checkToken = () => {
-        if (!localStorage.getItem("checkLionAuth")) {
-            setIsLogIn(false)
-        } else {
-            setIsLogIn(true);
-        }
+        setIsLogIn(checkLogin());
     }
 
     useEffect(() => {
