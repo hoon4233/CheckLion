@@ -1,5 +1,5 @@
 import React from "react";
-import { HashRouter, Route } from "react-router-dom";
+import {BrowserRouter, Route, Switch} from "react-router-dom";
 import Home from "./routes/Home";
 import Landing from "./routes/Landing";
 import Login from "./routes/Login";
@@ -8,17 +8,18 @@ import Teamselect from "./routes/Teamselect";
 import './App.css';
 
 
-
-
 function App() {
   return (
-  <HashRouter>
-    <Route path="/" exact={true} component={Landing} />
-    <Route path="/home" component={Home} />
-    <Route path="/login" component={Login} />
-    <Route path="/teamselect" component={Teamselect} />
-    <Route path="/team" component={Team} />
-  </HashRouter>
+  <BrowserRouter>
+    <Switch>
+      <Route path="/" exact component={Landing} />
+      <Route path="/home" exact component={Home} />
+      <Route path="/login" exact component={Login} />
+      <Route path="/teamselect" exact component={Teamselect} />
+      <Route path="/team" exact component={Team} />
+    </Switch>
+
+  </BrowserRouter>
   );
 }
 
