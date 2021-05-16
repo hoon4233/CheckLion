@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { Link, useHistory } from 'react-router-dom';
-import styled, { css } from 'styled-components';
+import React, {useEffect, useState} from "react";
+import {useHistory} from 'react-router-dom';
+import styled from 'styled-components';
 import logo from '../logo.png';
-import axios from 'axios';
+import {logInApi} from "../apis/AuthApi";
+import {CircularProgress} from "@material-ui/core";
 
 const Container = styled.div`
   width: 100%;
@@ -49,6 +50,7 @@ const ItemWrapper = styled.div`
   justify-content: center;
   flex-direction: column;
   text-align: center;
+
 `;
 
 const Button = styled.button`
@@ -65,87 +67,105 @@ const Button = styled.button`
 
 const InputBox = styled.div`
   margin: 15px;
-  &:hover{
+
+  &:hover {
     color: #ff9e1b;
   }
 `;
 
-function Login() {
+function Login(props) {
 
-  const [userid, setUserid] = useState('');
-  const [password, setPassword] = useState('');
-  const history = useHistory();
-  const data = {username: userid, password: password}
-  const API = "http://localhost:8000";
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [isLogIn, setIsLogIn] = useState(null);
+    const history = useHistory();
 
-  const idOnChange = (e) => {
-    setUserid(e.target.value);
-  }
+    const idOnChange = (e) => {
+        setEmail(e.target.value);
+    }
 
-  const passOnChange = (e) => {
-    setPassword(e.target.value);
-  }
+    const passOnChange = (e) => {
+        setPassword(e.target.value);
+    }
 
 
-  // 로그인 상태 유지할 때 쓰는 상수
-  // const JWT_EXPIRY_TOKEN = 1 * 3600 * 1000;
+    const onLogin = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        await logInApi.logIn(email, password).then((res) => {
+            localStorage.setItem('checkLionAuth', res.data.key);
+            setLoading(false);
+            alert('로그인 완료!');
+          props.history.goBack();
 
-  const onLogin = () => {
-    fetch(API, {
-      method: "POST",
-      headers: {
-        "Access-Control-Allow-Headers" : "Content-Type",
-        "Access-Control-Allow-Origin": "http://localhost:8000",
-        "Access-Control-Allow-Methods": "OPTIONS,POST"
-    },
-      body: JSON.stringify({
-        username: userid,
-        password: password
-      }),
-    })
-      .then(response => response.json())
-      .then(result => {
-        if(result.Authorization){
-          console.log(result.Authorization)
-          localStorage.setItem("token", result.Authorization);
+
+        }).catch(e => {
+            setError(e.response);
+            setLoading(false);
+        })
+
+    }
+
+
+    const checkToken = () => {
+        if (!localStorage.getItem("checkLionAuth")) {
+            setIsLogIn(false)
+        } else {
+            setIsLogIn(true);
         }
-        console.log(result.Authorization)
-      });
-  };
+    }
 
-  const checkToken = () => {
-    const token = localStorage.getItem("token");
-    alert(token)
-  }
+    useEffect(() => {
+        checkToken();
+    }, []);
 
-  return (
-    <Container>
-      <Header>
-        <Logo src={logo} alt='logo' />
-      </Header>
-      <Body>
-        <ItemWrapper>
-        <p style={{fontFamily: 'nexon-bold', fontSize: '30px', marginTop: '0px', marginBottom: '10px'}}>계정이 있으신가요?</p>
-        <p style={{fontFamily: 'nexon-light', marginTop: '0px', marginBottom: '28px'}}>본인 계정으로 로그인해주세요</p>
-        <form>
-          <InputBox>
-            <label style={{marginRight: '5px'}}>ID </label>
-            <input style={{borderRadius: '5px'}} type="text" value={userid} onChange={ idOnChange } />
-          </InputBox>
-          <InputBox>
-            <label style={{marginRight: '5px'}}>PW </label>
-            <input style={{borderRadius: '5px'}} type="password" value={password} onChange={ passOnChange } />
-          </InputBox>
-            <br />
-            <Button onClick={ onLogin } >
-                입장하기
-            </Button>
-        </form>
-        </ItemWrapper>
-      </Body>
-      <Footer></Footer>
-    </Container>
-  );
+
+    if (isLogIn) return null;
+    return (
+        <Container>
+            <Header>
+                <Logo src={logo} alt='logo'/>
+            </Header>
+            <Body>
+                <ItemWrapper>
+                    <p style={{fontFamily: 'nexon-bold', fontSize: '30px', marginTop: '0px', marginBottom: '10px'}}>계정이
+                        있으신가요?</p>
+                    <p style={{fontFamily: 'nexon-light', marginTop: '0px', marginBottom: '28px'}}>본인 계정으로 로그인해주세요</p>
+
+                    <form>
+                        <InputBox>
+                            <label style={{marginRight: '5px'}}>E-Mail </label>
+                            <input style={{borderRadius: '5px'}} type="text" value={email} onChange={idOnChange}/>
+                        </InputBox>
+                        <InputBox>
+                            <label style={{marginRight: '5px'}}>PW </label>
+                            <input style={{borderRadius: '5px'}} type="password" value={password}
+                                   onChange={passOnChange}/>
+                        </InputBox>
+                        {error && error.status === 400 && (<p style={{
+                            fontFamily: 'nexon-light',
+                            marginTop: '0px',
+                            marginBottom: '28px',
+                            color: 'orangered',
+                            fontWeight: 'bold'
+                        }}>이메일 혹은 비밀번호를 확인해주세요.</p>)}
+                        <br/>
+
+                        {loading === true ? (<CircularProgress/>) :
+                            (
+                                <Button onClick={onLogin}>
+                                    입장하기
+                                </Button>
+                            )
+                        }
+                    </form>
+                </ItemWrapper>
+            </Body>
+            <Footer/>
+        </Container>
+    );
 }
 
 export default Login;

@@ -47,7 +47,7 @@ const TeamContainer = styled.div`
 function Teamselect() {
   return (
     <div className="Teamselect">
-      <Sidebar login={true} width={300} height={"100vh"} name="관리자">
+      <Sidebar width={300} height={"100vh"} name="관리자">
         <InnerContainer>
           <CenterContainer>
           <TitleContainer>

@@ -146,7 +146,7 @@ const SubmitButton = styled.button`
 function Team() {
   return (
     <div className="Team">
-      <Sidebar login={true} width={300} height={"100vh"} name="관리자">
+      <Sidebar width={300} height={"100vh"} name="관리자">
         <InnerContainer>
           <CenterContainer>
               <TitleContainer>

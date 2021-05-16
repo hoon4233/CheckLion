@@ -66,7 +66,7 @@ const Button = styled.button`
 function Home() {
   return (
     <div>
-      <Sidebar login={false} width={300} height={"100vh"} name="관리자">
+      <Sidebar width={300} height={"100vh"} name="관리자">
       <Container>
         <Title>Ranking</Title>
         <RankingContainer>
