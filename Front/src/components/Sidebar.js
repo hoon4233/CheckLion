@@ -71,6 +71,12 @@ const MenuList = styled.li`
   transition: color .1s;
 `;
 
+const MenuLogo = styled.span`
+  :active {
+    transform: rotate(90deg);
+  }
+`;
+
 const Logout = styled.div`
   background-color: #ececec;
   padding: 10px 5px;
@@ -91,31 +97,35 @@ const LogoutLetter = styled.span`
 
 const Sidebar = ({isLogin, name, width, height, children}) => {
     const [xPosition, setX] = React.useState(-width);
+    const [rotate, setRotate] = React.useState(0);
 
 
     const toggleMenu = () => {
         if (xPosition < 0) {
             setX(0);
+            setRotate(90)
         } else {
             setX(-width);
+            setRotate(0);
         }
     };
 
 
-
     React.useEffect(() => {
-        setX(0);
-    }, []);
-
-
+        if (isLogin) {
+            setX(-width);
+        } else {
+            setX(0);
+        }
+    }, [isLogin]);
 
 
     const handleLogout = async () => {
-        await logoutApi.logout().then(()=> {
+        await logoutApi.logout().then(() => {
             localStorage.removeItem('checkLionAuth');
             window.location.reload();
         }).catch(e => {
-            alert('로그아웃 실패 다시 시도해주세요.');
+                alert('로그아웃 실패 다시 시도해주세요.');
             }
         )
     };
@@ -125,9 +135,9 @@ const Sidebar = ({isLogin, name, width, height, children}) => {
         <React.Fragment>
             <Header>
                 <div className="fa-2x">
-                    <FontAwesomeIcon
-                        onClick={() => toggleMenu()}
-                        icon={faBars}/>
+                        <FontAwesomeIcon style={{cursor: 'pointer', transform:`rotate(${rotate}deg)`} }
+                                         onClick={() => toggleMenu()}
+                                         icon={faBars}/>
                     <Link to={'/home'}>
                         <LogoContainer>
                             <img src={logoimg} alt="logo" width='180'/>
@@ -145,14 +155,14 @@ const Sidebar = ({isLogin, name, width, height, children}) => {
                             {isLogin ? "환영합니다 " + name + "님!" : "로그인해주세요"}
                         </UserInfo>
                         {isLogin ?
-                                <Menu>
-                                    <MenuList style ={{cursor:'pointer'}} onClick={handleLogout}>Logout</MenuList>
-                                    <Link to="/home"><MenuList>Ranking</MenuList></Link>
-                                    <Link to="/teams"><MenuList>Team</MenuList></Link>
-                                </Menu>
-                                : <Menu>
-                                    <Link to="/login"><MenuList>Login</MenuList></Link>
-                                </Menu>}
+                            <Menu>
+                                <MenuList style={{cursor: 'pointer'}} onClick={handleLogout}>Logout</MenuList>
+                                <Link to="/home"><MenuList>Ranking</MenuList></Link>
+                                <Link to="/teams"><MenuList>Team</MenuList></Link>
+                            </Menu>
+                            : <Menu>
+                                <Link to="/login"><MenuList>Login</MenuList></Link>
+                            </Menu>}
 
                         {/*{isLogin ?*/}
                         {/*    <div>*/}
