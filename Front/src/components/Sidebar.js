@@ -139,39 +139,38 @@ const Sidebar = ({isLogin, name, width, height, children}) => {
                 <Navi
                     style={{
                         transform: `translatex(${xPosition}px)`,
-                    }}
-                >
+                    }}>
                     <Content>
                         <UserInfo>
                             {isLogin ? "환영합니다 " + name + "님!" : "로그인해주세요"}
                         </UserInfo>
-                        {
-                            isLogin ?
+                        {isLogin ?
                                 <Menu>
                                     <MenuList style ={{cursor:'pointer'}} onClick={handleLogout}>Logout</MenuList>
-                                </Menu>
-                                : <Menu>
-                                    <Link to="/login"><MenuList>Login</MenuList></Link>
-                                </Menu>
-                        }
-
-                        {isLogin ?
-                            <>
-                                <Menu>
                                     <Link to="/home"><MenuList>Ranking</MenuList></Link>
                                     <Link to="/teamselect"><MenuList>Team</MenuList></Link>
                                 </Menu>
-                                <Logout>
-                                    <LogoutContent
-                                        onClick={() => toggleMenu()}
-                                    >
-                                        <FontAwesomeIcon icon={faSignOutAlt} rotation={180}/>
-                                        <LogoutLetter>logout</LogoutLetter>
-                                    </LogoutContent>
-                                </Logout>
-                            </>
-                            : null
-                        }
+                                : <Menu>
+                                    <Link to="/login"><MenuList>Login</MenuList></Link>
+                                </Menu>}
+
+                        {/*{isLogin ?*/}
+                        {/*    <div>*/}
+                        {/*        <Menu>*/}
+                        {/*            <Link to="/home"><MenuList>Ranking</MenuList></Link>*/}
+                        {/*            <Link to="/teamselect"><MenuList>Team</MenuList></Link>*/}
+                        {/*        </Menu>*/}
+                        {/*        <Logout>*/}
+                        {/*            <LogoutContent*/}
+                        {/*                onClick={() => toggleMenu()}>*/}
+                        {/*                <FontAwesomeIcon icon={faSignOutAlt} rotation={180}/>*/}
+                        {/*                <LogoutLetter>logout</LogoutLetter>*/}
+                        {/*            </LogoutContent>*/}
+                        {/*        </Logout>*/}
+                        {/*    </div>*/}
+                        {/*    : <Menu>*/}
+                        {/*        <Link to="/login"><MenuList>Login</MenuList></Link>*/}
+                        {/*    </Menu>}*/}
                     </Content>
                 </Navi>
                 <BodyContainer>
