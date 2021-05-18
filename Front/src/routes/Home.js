@@ -49,11 +49,16 @@ const Button = styled.button`
   background: none;
   cursor: pointer;
   font-family: 'nexon-bold';
-
   &:hover {
     color: #ff9e1b;
   }
 `;
+const LoginMsg = styled.div`
+  font-size: 25px;
+  text-align: center;
+  font-family: 'S-CoreDream-3Light;
+`;
+
 
 function Home() {
     const [rankings, setRankings] = useState(null);
@@ -71,7 +76,6 @@ function Home() {
         ).catch(e => {
             setIsLogIn(false);
             localStorage.removeItem('checkLionAuth');
-            console.log(e.response);
         });
     }
 
@@ -87,14 +91,23 @@ function Home() {
                     <RankingContainer>
                         <RankingItem rank={'순위'} name={"팀명"} score={"점수"}/>
                         <hr style={{width: '600px'}}/>
-                        {!loading ? (
+                        {!isLogIn ? (
+                            <LoginMsg>
+                                <p>로그인 후 이용해 주세요.</p>
+                            </LoginMsg>) :
                             <div>
-                                {rankings.map((item, index) => (
-                                    <RankingItem rank={index + 1} name={item.name} score={item.total_point}/>
-                                ))}
-                            </div>
+                                {!loading ? (
+                                    <div>
+                                        {rankings.map((item, index) => (
+                                            <RankingItem rank={index + 1} name={item.name} score={item.total_point}/>
+                                        ))}
+                                    </div>
 
-                        ) : <CircularProgress/>}
+
+                                ) : <CircularProgress/>}
+                            </div>
+                        }
+
                     </RankingContainer>
                 </Container>
             </Sidebar>
