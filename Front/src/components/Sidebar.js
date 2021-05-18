@@ -148,7 +148,7 @@ const Sidebar = ({isLogin, name, width, height, children}) => {
                                 <Menu>
                                     <MenuList style ={{cursor:'pointer'}} onClick={handleLogout}>Logout</MenuList>
                                     <Link to="/home"><MenuList>Ranking</MenuList></Link>
-                                    <Link to="/teamselect"><MenuList>Team</MenuList></Link>
+                                    <Link to="/teams"><MenuList>Team</MenuList></Link>
                                 </Menu>
                                 : <Menu>
                                     <Link to="/login"><MenuList>Login</MenuList></Link>

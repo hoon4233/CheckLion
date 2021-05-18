@@ -15,8 +15,8 @@ function App() {
       <Route path="/" exact component={Landing} />
       <Route path="/home" exact component={Home} />
       <Route path="/login" exact component={Login} />
-      <Route path="/teamselect" exact component={Teamselect} />
-      <Route path="/team" exact component={Team} />
+      <Route path="/teams" exact component={Teamselect} />
+      <Route path="/teams/:name" exact component={Team} />
     </Switch>
 
   </BrowserRouter>

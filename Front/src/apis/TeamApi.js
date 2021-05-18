@@ -15,3 +15,13 @@ export const rankingApi = {
             }
         })
 }
+
+
+export const teamListApi = {
+    getTeamList: (token) =>
+        api.get('/member/teams/', {
+            headers: {
+                Authorization: 'Token ' + token,
+            }
+        })
+}
