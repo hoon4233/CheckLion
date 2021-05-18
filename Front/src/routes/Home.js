@@ -70,6 +70,7 @@ function Home() {
             }
         ).catch(e => {
             setIsLogIn(false);
+            localStorage.removeItem('checkLionAuth');
             console.log(e.response);
         });
     }
