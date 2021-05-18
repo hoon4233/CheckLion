@@ -62,7 +62,7 @@ const LoginMsg = styled.div`
 
 function Home() {
     const [rankings, setRankings] = useState(null);
-    const [isLogIn, setIsLogIn] = useState(false);
+    const [isLogIn, setIsLogIn] = useState(true);
     const [loading, setLoading] = useState(true);
 
 

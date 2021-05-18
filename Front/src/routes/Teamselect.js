@@ -52,7 +52,7 @@ const LoginMsg = styled.div`
 
 function Teamselect() {
     const [teams, setTeams] = useState(null);
-    const [isLogIn, setIsLogIn] = useState(false);
+    const [isLogIn, setIsLogIn] = useState(true);
     const [loading, setLoading] = useState(true);
 
     const fetchTeams = async () => {
