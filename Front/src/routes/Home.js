@@ -56,7 +56,7 @@ const Button = styled.button`
 const LoginMsg = styled.div`
   font-size: 25px;
   text-align: center;
-  font-family: 'S-CoreDream-3Light;
+  font-family: 'S-CoreDream-3Light';
 `;
 
 
