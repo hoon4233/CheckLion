@@ -100,8 +100,6 @@ function Login(props) {
             setLoading(false);
             alert('로그인 완료!');
           props.history.goBack();
-
-
         }).catch(e => {
             setError(e.response);
             setLoading(false);
@@ -116,7 +114,11 @@ function Login(props) {
 
     useEffect(() => {
         checkToken();
-    }, []);
+        if (isLogIn) {
+            alert('이미 로그인 된 사용자 입니다.');
+            props.history.goBack();
+        }
+    }, [isLogIn]);
 
 
     if (isLogIn) return null;

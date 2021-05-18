@@ -54,7 +54,7 @@ const Navi = styled.div`
   width: 40%;
   position: fixed;
   height: 90vh;
-  min-height: height;
+  //min-height: height;
 
 `;
 
@@ -89,9 +89,8 @@ const LogoutLetter = styled.span`
   margin-left: 10px;
 `
 
-const Sidebar = ({name, width, height, children}) => {
+const Sidebar = ({isLogin, name, width, height, children}) => {
     const [xPosition, setX] = React.useState(-width);
-    const [isLogIn, setIsLogIn] = useState(null);
 
 
     const toggleMenu = () => {
@@ -102,24 +101,18 @@ const Sidebar = ({name, width, height, children}) => {
         }
     };
 
-    const checkToken = () => {
-        setIsLogIn(checkLogin());
-    }
+
 
     React.useEffect(() => {
         setX(0);
     }, []);
 
 
-    React.useEffect(() => {
-        checkToken();
-    }, []);
 
 
     const handleLogout = async () => {
         await logoutApi.logout().then(()=> {
             localStorage.removeItem('checkLionAuth');
-            setIsLogIn(false);
             window.location.reload();
         }).catch(e => {
             alert('로그아웃 실패 다시 시도해주세요.');
@@ -150,10 +143,10 @@ const Sidebar = ({name, width, height, children}) => {
                 >
                     <Content>
                         <UserInfo>
-                            {isLogIn ? "환영합니다 " + name + "님!" : "로그인해주세요"}
+                            {isLogin ? "환영합니다 " + name + "님!" : "로그인해주세요"}
                         </UserInfo>
                         {
-                            isLogIn ?
+                            isLogin ?
                                 <Menu>
                                     <MenuList style ={{cursor:'pointer'}} onClick={handleLogout}>Logout</MenuList>
                                 </Menu>
@@ -162,7 +155,7 @@ const Sidebar = ({name, width, height, children}) => {
                                 </Menu>
                         }
 
-                        {isLogIn ?
+                        {isLogin ?
                             <>
                                 <Menu>
                                     <Link to="/home"><MenuList>Ranking</MenuList></Link>
