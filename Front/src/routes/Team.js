@@ -148,6 +148,7 @@ function Team(props) {
     const [users, setUsers] = useState(null);
     const [isLogIn, setIsLogIn] = useState(true);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     const fetchUsers = async () => {
         setLoading(true);
@@ -156,8 +157,15 @@ function Team(props) {
             setIsLogIn(true);
             setLoading(false);
         }).catch(e => {
-            setIsLogIn(false);
-            localStorage.removeItem('checkLionAuth');
+            console.log(e.response);
+            if (e.response.data.detail === "이 작업을 수행할 권한(permission)이 없습니다.") {
+               alert('권한이 없습니다.')
+                props.history.goBack();
+            } else {
+                setIsLogIn(false);
+                localStorage.removeItem('checkLionAuth');
+            }
+
         })
     }
 
