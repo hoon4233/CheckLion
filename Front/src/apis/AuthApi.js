@@ -1,4 +1,5 @@
 import axios from "axios";
+import Registration from "../routes/Registration";
 
 const api = axios.create(
     {
@@ -18,4 +19,14 @@ export const logInApi = {
 export const logoutApi = {
     logout: (email, password) =>
         api.post('/member/logout/')
+}
+
+export const registrationApi = {
+    register: (name, email, password, conPassword) =>
+        api.post('/member/registration/', {
+            username: name,
+            email: email,
+            password1: password,
+            password2: conPassword
+        })
 }

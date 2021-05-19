@@ -162,6 +162,7 @@ const Sidebar = ({isLogin, name, width, height, children}) => {
                             </Menu>
                             : <Menu>
                                 <Link to="/login"><MenuList>Login</MenuList></Link>
+                                <Link to="/registration"><MenuList>registration</MenuList></Link>
                             </Menu>}
 
                         {/*{isLogin ?*/}
