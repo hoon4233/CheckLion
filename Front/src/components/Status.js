@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserAlt, faToggleOn, faToggleOff } from "@fortawesome/free-solid-svg-icons";
 import styled from 'styled-components';
@@ -37,8 +37,11 @@ const CircleDiv = styled.span`
 
 const Toggle = false;
 
-function Status() {
-  
+function Status({name}) {
+    const [assignment, setAssignment] = useState(true);
+    const [attendance, setAttendance] = useState(true);
+    const [lecture, setLecture] = useState(true);
+
 
   return (
     <Container>
@@ -48,17 +51,25 @@ function Status() {
           </CircleDiv> 
       </InnerStatus>
       <InnerStatus>
-          <h3>윤승권</h3>
+          <h3>{name}</h3>
       </InnerStatus>
       <InnerStatus>
-        <FontAwesomeIcon color="#FF9E1B" size="3x" icon={ Toggle ? faToggleOn :faToggleOff} />
+        <FontAwesomeIcon color="#FF9E1B" size="3x" icon={ assignment ? faToggleOn :faToggleOff}
+                         onClick={() => setAssignment((prevState => !prevState)) } />
       </InnerStatus>
       <InnerStatus>
-      <FontAwesomeIcon color="#FF9E1B" size="3x" icon={ Toggle ? faToggleOn :faToggleOff} />
+      <FontAwesomeIcon color="#FF9E1B" size="3x" icon={ attendance ? faToggleOn :faToggleOff}
+                       onClick={() => setAttendance((prevState => !prevState)) } />
       </InnerStatus>
       <InnerStatus>
-      <FontAwesomeIcon color="#FF9E1B" size="3x" icon={ Toggle ? faToggleOn :faToggleOff} />
+      <FontAwesomeIcon color="#FF9E1B" size="3x" icon={ lecture ? faToggleOn :faToggleOff}
+                       onClick={() => setLecture((prevState => !prevState)) } />
       </InnerStatus>
+
+        <InnerStatus>
+            <FontAwesomeIcon color="#FF9E1B" size="3x" icon={ lecture ? faToggleOn :faToggleOff}
+                             onClick={() => setLecture((prevState => !prevState)) } />
+        </InnerStatus>
     </Container>  
   );
 }

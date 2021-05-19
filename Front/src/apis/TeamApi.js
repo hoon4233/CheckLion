@@ -1,4 +1,5 @@
 import axios from "axios";
+
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
 axios.defaults.xsrfCookieName = "csrftoken";
 const api = axios.create(
@@ -20,6 +21,15 @@ export const rankingApi = {
 export const teamListApi = {
     getTeamList: (token) =>
         api.get('/member/teams/', {
+            headers: {
+                Authorization: 'Token ' + token,
+            }
+        })
+}
+
+export const usersOfTeamAPi = {
+    getUsers: (token, teamName) =>
+        api.get('/member/' + teamName + '/users/', {
             headers: {
                 Authorization: 'Token ' + token,
             }
