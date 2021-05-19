@@ -59,6 +59,18 @@ class TeamRankingList(generics.ListAPIView):
         
         return Team.objects.all().order_by('-total_point')
 
+# 해당 주차 해당 팀의 인원들 점수 정보 반환
+class ScoreOfWeekList(generics.ListAPIView):
+    serializer_class = PersonalScoreSerializer
+    permission_classes = [IsAdminUser]
+
+    def get_queryset(self):
+        team, week = self.kwargs['team'], self.kwargs['week']
+        members = User.objects.filter(team_id=team)
+        scores = Score.objects.filter(week=week).filter(user_id__in=members)
+        return scores
+
+# 해당 팀의 인원들 점수 생성
 class ScoreCreate(generics.CreateAPIView):
     queryset = AdditionalPoint.objects.all()
     serializer_class = PersonalScoreSerializer

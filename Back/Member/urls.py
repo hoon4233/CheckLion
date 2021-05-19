@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import UserList, TeamList,TeamRankingList, ScoreCreate, AddPointCreate
+from .views import UserList, TeamList,TeamRankingList, ScoreOfWeekList,ScoreCreate, AddPointCreate
 from rest_auth.views import ( LoginView, LogoutView, PasswordChangeView, 
 PasswordResetView, PasswordResetConfirmView )
 from rest_auth.registration.views import RegisterView
@@ -16,6 +16,7 @@ urlpatterns = [
     path('<str:team>/users/', UserList.as_view(), name='Team-User-list'),
     path('teams/', TeamList.as_view(), name='Team-list'),
     path('ranking/', TeamRankingList.as_view(), name='Team-Ranking-list'),
+    path('score/<str:team>/<int:week>/', ScoreOfWeekList.as_view(), name='Score-of-week-list'),
     path('score/<str:team>/', ScoreCreate.as_view(), name='Score-create'),
     path('addpoint/', AddPointCreate.as_view(), name='Add_Point-create')
 
