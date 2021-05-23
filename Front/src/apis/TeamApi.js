@@ -1,5 +1,34 @@
 import axios from "axios";
 
+const data = [
+    {
+        user_id: "kang@likelion.org",
+        week: 2,
+        assignment: true,
+        attendance: true,
+        lecture: true
+    },
+    {
+        user_id: "qkr@likelion.org",
+        week: 2,
+        assignment: true,
+        attendance: true,
+        lecture: true
+    },
+    {
+        user_id: "ths@likelion.org",
+        week: 2,
+        assignment: true,
+        attendance: true,
+        lecture: true
+    }, {
+        user_id: "normal@likelion.org",
+        week: 2,
+        assignment: true,
+        attendance: false,
+        lecture: true
+    }]
+
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
 axios.defaults.xsrfCookieName = "csrftoken";
 const api = axios.create(
@@ -47,13 +76,9 @@ export const teamScoreOfWeekApi = {
 }
 
 export const scoreCreateApi = {
-    postScore: (token, teamName, week, assignment, attendance, lecture, email) =>
+    postScore: (token, teamName, data) =>
         api.post('/member/score/' + teamName + '/', {
-            week: week,
-            assignment: assignment,
-            attendance: attendance,
-            lecture: lecture,
-            user_id: email
+            data
         }, {
             headers: {
                 Authorization: 'Token ' + token

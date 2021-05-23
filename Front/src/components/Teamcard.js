@@ -37,12 +37,12 @@ const Teamcard = ({name, totalscore}) => {
 
             <TeamContent>
                 <ProfileImg>
-                    <Link to={`teams/${name}`}>
+                    <Link to={`teams/${name}`} style={{zIndex: '10'}}>
                         <img src={profileimg} width='100' alt={'팀 로고'}/>
                     </Link>
                 </ProfileImg>
                 <NameContent>
-                    <Link to={`teams/${name}`}>
+                    <Link to={`teams/${name}`} style={{zIndex: '10'}}>
                         <h3>{name}</h3>
                     </Link>
                 </NameContent>

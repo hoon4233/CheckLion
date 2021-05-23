@@ -1,11 +1,11 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import Sidebar from '../components/Sidebar'
 import Status from '../components/Status'
 import styled from 'styled-components';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faChevronLeft, faChevronRight} from "@fortawesome/free-solid-svg-icons";
 import '../App.css';
-import {teamScoreOfWeekApi, usersOfTeamAPi} from "../apis/TeamApi";
+import {scoreCreateApi, teamScoreOfWeekApi, usersOfTeamAPi} from "../apis/TeamApi";
 import {getToken} from "../modules/auth";
 import {CircularProgress} from "@material-ui/core";
 import {weekOfToday} from "../modules/date";
@@ -42,6 +42,15 @@ const WeekContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+const AlertText = styled.text`
+  width: 100%;
+  height: 10%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: orangered;
 `;
 
 const WeekSpan = styled.span`
@@ -151,8 +160,12 @@ function Team(props) {
     const [scoreLoading, setScoreLoading] = useState(true);
     const [week, setWeek] = useState(weekOfToday);
     const [teamScores, setTeamScores] = useState(null);
+    const [data, setData] = useState([]);
     const [error, setError] = useState(null);
 
+    let tempData = [];
+
+    // 유저 리스트 가져오는 api 통신
     const fetchUsers = async () => {
         setLoading(true);
         await usersOfTeamAPi.getUsers(getToken(), props.match.params['name']).then(res => {
@@ -172,11 +185,14 @@ function Team(props) {
         })
     }
 
+    // 팀 점수(주차별) 가져오는 api 통신
     const fetchTeamScore = async () => {
+        setData([]);
         setScoreLoading(true);
         await teamScoreOfWeekApi.getScoreOfWeek(getToken(), props.match.params['name'], week).then(res => {
             setTeamScores(res.data);
             setScoreLoading(false)
+
         }).catch(e => {
             setScoreLoading(false)
             console.log(e.response);
@@ -184,16 +200,40 @@ function Team(props) {
     }
 
 
+    // 첫 페이지 로딩시 유저 정보 가져오기
     useEffect(() => {
         console.log(week);
         fetchUsers();
     }, []);
 
+    // 주차 바뀌면 팀 점수 해당 주차에 맞게 가져오기
     useEffect(() => {
         fetchTeamScore()
+
     }, [week]);
 
+    // 데이터 포스트용 임시 데이터 생성
+    useEffect(() => {
+        setData([]);
+        tempData = [];
+        if (teamScores !== null && teamScores.length < 1 && users !== null) {
+            for (let i = 0; i < users.length; i++) {
+                tempData.push({
+                    user_id: users[i].email,
+                    week: week,
+                    assignment: false,
+                    attendance: false,
+                    lecture: false
+                })
+            }
 
+        }
+        setData(tempData);
+
+    }, [teamScores])
+
+
+    // 1주차 밑, 오늘 날짜 주차보다 위로 못가게
     const onLastWeek = () => {
         if (week > 1) {
             setWeek(week - 1);
@@ -207,6 +247,32 @@ function Team(props) {
 
     }
 
+    // 하위 컴포넌트에서 정보 받아서 수정된거 스테이트로 관리
+    const handleScoreData = (email, kind, value) => {
+        console.log(email, kind, value);
+        if (kind === 'all') {
+            setData(
+                data.map(item =>
+                    item.user_id === email ? {...item, assignment: value, attendance: value, lecture: value} : item)
+            );
+        } else {
+            setData(
+                data.map(item =>
+                    item.user_id === email ? {...item, [kind]: value} : item)
+            );
+        }
+    }
+
+    // 점수 정보 보내기
+    const postTeamScore = async () =>{
+        await scoreCreateApi.postScore(getToken(), props.match.params['name'], data).then(res => {
+            alert('저장 완료!')
+            window.location.reload();
+        }).catch(e => {
+            alert('저장 실패 ㅜ.ㅜ')
+        });
+    }
+
 
     return (
         <div className="Team">
@@ -215,18 +281,24 @@ function Team(props) {
                     <CenterContainer>
                         <TitleContainer>
                             <h1>{props.match.params['name']}</h1>
+
                         </TitleContainer>
                         <WeekContainer>
-                            <FontAwesomeIcon size="2x" icon={faChevronLeft} onClick={onLastWeek}/>
+                            <FontAwesomeIcon size="2x" icon={faChevronLeft} onClick={onLastWeek}
+                                             style={{cursor: 'pointer'}}/>
                             <WeekSpan><h2>Week {week}</h2></WeekSpan>
-                            <FontAwesomeIcon size="2x" icon={faChevronRight} onClick={onNextWeek}/>
+                            <FontAwesomeIcon size="2x" icon={faChevronRight} onClick={onNextWeek}
+                                             style={{cursor: 'pointer'}}/>
                         </WeekContainer>
+
+                        {teamScores && teamScores.length > 0 &&
+                        <AlertText>이미 저장 된 주차 입니다.</AlertText>}
                         <StatusWrapper>
                             <StatusContainer>
                                 <LeftStatusContainer>
                                     <TableHeaderContainer>
-                                        <TableHeader><h3></h3></TableHeader>
-                                        <TableHeader><h3></h3></TableHeader>
+                                        <TableHeader><h3/></TableHeader>
+                                        <TableHeader><h3/></TableHeader>
                                         <TableHeader><h3>과제</h3></TableHeader>
                                         <TableHeader><h3>출석</h3></TableHeader>
                                         <TableHeader><h3>강의</h3></TableHeader>
@@ -243,7 +315,9 @@ function Team(props) {
                                                         <Status name={item.name} userId={item.id} key={index}
                                                                 teamName={props.match.params['name']} week={week}
                                                                 email={item.email}
-                                                                score={teamScores}/>
+                                                                score={teamScores}
+                                                                handleScoreData={(email, kind, value) =>
+                                                                    handleScoreData(email, kind, value)}/>
                                                     ))}
                                                 </div>
                                             ) : <CircularProgress/>}
@@ -253,9 +327,13 @@ function Team(props) {
                             </StatusContainer>
                         </StatusWrapper>
                         <SubmitContainer>
-                            <SubmitButton>
-                                저장하기
-                            </SubmitButton>
+                            {teamScores !== null && teamScores.length > 0 ?
+                                <SubmitButton style={{cursor: 'not-allowed'}}>
+                                    저장하기
+                                </SubmitButton> :
+                                <SubmitButton style={{cursor: 'pointer'}} onClick={postTeamScore}>
+                                    저장하기
+                                </SubmitButton>}
                         </SubmitContainer>
                     </CenterContainer>
                 </InnerContainer>

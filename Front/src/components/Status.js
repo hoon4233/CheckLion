@@ -32,13 +32,13 @@ const CircleDiv = styled.span`
 `;
 
 
-function Status({userId, name, score, teamName, week, email}) {
-    const [assignment, setAssignment] = useState(true);
-    const [attendance, setAttendance] = useState(true);
-    const [lecture, setLecture] = useState(true);
-
+function Status({userId, name, score, teamName, week, email, handleScoreData}) {
+    const [assignment, setAssignment] = useState(false);
+    const [attendance, setAttendance] = useState(false);
+    const [lecture, setLecture] = useState(false);
     const [targetUserScore, setTargetUserScore] = useState(null);
 
+    // 주차별 멤버 전체 점수에서 해당 status의 유저 점수만 뽑기
     useEffect(() => {
         if (score && score.length > 0) {
             setTargetUserScore(score.filter(item => item.user_id === userId)[0]);
@@ -47,67 +47,48 @@ function Status({userId, name, score, teamName, week, email}) {
         }
     }, [score]);
 
+    // 이미 데이가 있으면 가져오고, 아니면 false로 초기화
     useEffect(() => {
-        if (targetUserScore !== null && targetUserScore !== undefined) {
-
-            console.log(targetUserScore);
-            console.log(targetUserScore.assignment);
-            setAssignment(targetUserScore.assignment);
-            setAttendance(targetUserScore.attendance);
-            setLecture(targetUserScore.lecture);
-        } else {
+        if (targetUserScore === null || targetUserScore === undefined  ) {
             setAssignment(false);
             setAttendance(false);
             setLecture(false);
+        } else {
+            setAssignment(targetUserScore.assignment);
+            setAttendance(targetUserScore.attendance);
+            setLecture(targetUserScore.lecture);
         }
     }, [targetUserScore]);
 
 
-    const postScore = async () => {
-        await scoreCreateApi.postScore(getToken(), teamName, week, assignment, attendance, lecture, userId).then(res => {
-
-        }).catch(e => {
-            alert('저장 실패')
-        });
-    }
-
+    // 반복되는 코드긴 한데
+    // 유저별 버튼 눌렀을때 상태 관리 (handleScoreData로 상위 컴포넌트로 저장)
     const handleAssigment = async () => {
+        handleScoreData(email, 'assignment', !assignment);
         setAssignment((prevState => !prevState));
-        // await scoreCreateApi.postScore(getToken(), teamName, week, !assignment, attendance, lecture, email).then(res => {
-        //     setAssignment((prevState => !prevState));
-        // }).catch(e => {
-        //     console.log(e.response)
-        //     alert('저장 실패')
-        // });
-
     }
 
     const handleAttendance = async () => {
+        handleScoreData(email, 'attendance', !attendance);
         setAttendance((prevState => !prevState));
-        // await scoreCreateApi.postScore(getToken(), teamName, week, assignment, !attendance, lecture, email).then(res => {
-        //     setAttendance((prevState => !prevState));
-        // }).catch(e => {
-        //     alert('저장 실패')
-        // });
 
     }
 
     const handleLecture = async () => {
+        handleScoreData(email, 'lecture', !lecture);
         setLecture((prevState => !prevState));
-        // await scoreCreateApi.postScore(getToken(), teamName, week, assignment, attendance, !lecture, email).then(res => {
-        //     setLecture((prevState => !prevState));
-        // }).catch(e => {
-        //     alert('저장 실패')
-        // });
 
     }
 
-    const handleAllCheck = () =>{
+    // 전체 true로
+    const handleAllCheck = () => {
+        handleScoreData(email, 'all', true);
         setAssignment(true);
         setAttendance(true);
         setLecture(true);
     }
-     return (
+
+    return (
         <Container>
             <InnerStatus>
                 <CircleDiv>
@@ -119,24 +100,36 @@ function Status({userId, name, score, teamName, week, email}) {
             </InnerStatus>
             <InnerStatus>
                 <FontAwesomeIcon color="#FF9E1B" size="3x"
-                                 icon={assignment !== undefined && assignment ? faToggleOn : faToggleOff}
-                                 onClick={() => handleAssigment()}/>
+                                 icon={assignment ? faToggleOn : faToggleOff}
+                                 onClick={targetUserScore !== null && targetUserScore !== undefined ?
+                                     null : () => handleAssigment()}/>
             </InnerStatus>
             <InnerStatus>
+                {/*<FontAwesomeIcon color="#FF9E1B" size="3x"*/}
+                {/*                 icon={ attendance ? faToggleOn : faToggleOff}*/}
+                {/*                 onClick={() => handleAttendance()}/>*/}
+
                 <FontAwesomeIcon color="#FF9E1B" size="3x"
-                                 icon={attendance !== undefined && attendance ? faToggleOn : faToggleOff}
-                                 onClick={() => handleAttendance()}/>
+                                 icon={attendance ? faToggleOn : faToggleOff}
+                                 onClick={targetUserScore !== null && targetUserScore !== undefined ?
+                                     null : () => handleAttendance()}/>
             </InnerStatus>
             <InnerStatus>
+                {/*<FontAwesomeIcon color="#FF9E1B" size="3x"*/}
+                {/*                 icon={lecture ? faToggleOn : faToggleOff}*/}
+                {/*                 onClick={() => handleLecture()}/>*/}
+
                 <FontAwesomeIcon color="#FF9E1B" size="3x"
-                                 icon={lecture !== undefined && lecture ? faToggleOn : faToggleOff}
-                                 onClick={() => handleLecture()}/>
+                                 icon={lecture ? faToggleOn : faToggleOff}
+                                 onClick={targetUserScore !== null && targetUserScore !== undefined ?
+                                     null : () => handleLecture()}/>
 
             </InnerStatus>
             <InnerStatus>
                 <FontAwesomeIcon color="#FF9E1B" size="3x"
                                  icon={faCheck}
-                                 onClick={() => handleAllCheck()}/>
+                                 onClick={targetUserScore !== null && targetUserScore !== undefined ?
+                                     null : () => handleAllCheck()}/>
             </InnerStatus>
         </Container>
     );
