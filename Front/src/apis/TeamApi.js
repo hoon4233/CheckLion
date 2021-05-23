@@ -35,3 +35,28 @@ export const usersOfTeamAPi = {
             }
         })
 }
+
+
+export const teamScoreOfWeekApi = {
+    getScoreOfWeek: (token, teamName, week) =>
+        api.get('/member/score/' + teamName + '/' + week + '/', {
+            headers: {
+                Authorization: 'Token ' + token,
+            }
+        })
+}
+
+export const scoreCreateApi = {
+    postScore: (token, teamName, week, assignment, attendance, lecture, email) =>
+        api.post('/member/score/' + teamName + '/', {
+            week: week,
+            assignment: assignment,
+            attendance: attendance,
+            lecture: lecture,
+            user_id: email
+        }, {
+            headers: {
+                Authorization: 'Token ' + token
+            }
+        })
+}

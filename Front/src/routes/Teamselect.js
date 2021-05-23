@@ -89,14 +89,9 @@ function Teamselect() {
                                   <Grid container spacing={3}>
                                   {teams.map((item, index) => (
                                       <Grid item lg={4}>
-                                        <Teamcard name={item.name} />
+                                        <Teamcard name={item.name}  />
                                       </Grid>
                                   ))}
-                                    {teams.map((item, index) => (
-                                        <Grid item lg={4}>
-                                          <Teamcard name={item.name} />
-                                        </Grid>
-                                    ))}
                                   </Grid>
                                 </TeamContainer>
                             ) : <CircularProgress/>}

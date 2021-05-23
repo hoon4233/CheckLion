@@ -3,12 +3,12 @@ import Sidebar from '../components/Sidebar'
 import Status from '../components/Status'
 import styled from 'styled-components';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faChevronRight, faChevronCircleLeft, faChevronLeft} from "@fortawesome/free-solid-svg-icons";
+import {faChevronLeft, faChevronRight} from "@fortawesome/free-solid-svg-icons";
 import '../App.css';
-import {usersOfTeamAPi} from "../apis/TeamApi";
+import {teamScoreOfWeekApi, usersOfTeamAPi} from "../apis/TeamApi";
 import {getToken} from "../modules/auth";
-import RankingItem from "../components/RankingItem";
 import {CircularProgress} from "@material-ui/core";
+import {weekOfToday} from "../modules/date";
 
 const InnerContainer = styled.div`
   width: 100%;
@@ -148,6 +148,9 @@ function Team(props) {
     const [users, setUsers] = useState(null);
     const [isLogIn, setIsLogIn] = useState(true);
     const [loading, setLoading] = useState(true);
+    const [scoreLoading, setScoreLoading] = useState(true);
+    const [week, setWeek] = useState(weekOfToday);
+    const [teamScores, setTeamScores] = useState(null);
     const [error, setError] = useState(null);
 
     const fetchUsers = async () => {
@@ -159,7 +162,7 @@ function Team(props) {
         }).catch(e => {
             console.log(e.response);
             if (e.response.data.detail === "이 작업을 수행할 권한(permission)이 없습니다.") {
-               alert('권한이 없습니다.')
+                alert('권한이 없습니다.')
                 props.history.goBack();
             } else {
                 setIsLogIn(false);
@@ -169,10 +172,40 @@ function Team(props) {
         })
     }
 
+    const fetchTeamScore = async () => {
+        setScoreLoading(true);
+        await teamScoreOfWeekApi.getScoreOfWeek(getToken(), props.match.params['name'], week).then(res => {
+            setTeamScores(res.data);
+            setScoreLoading(false)
+        }).catch(e => {
+            setScoreLoading(false)
+            console.log(e.response);
+        });
+    }
+
+
     useEffect(() => {
-        console.log(props.match.params['name']);
+        console.log(week);
         fetchUsers();
     }, []);
+
+    useEffect(() => {
+        fetchTeamScore()
+    }, [week]);
+
+
+    const onLastWeek = () => {
+        if (week > 1) {
+            setWeek(week - 1);
+        }
+
+    }
+    const onNextWeek = () => {
+        if (week < weekOfToday) {
+            setWeek(week + 1);
+        }
+
+    }
 
 
     return (
@@ -184,17 +217,20 @@ function Team(props) {
                             <h1>{props.match.params['name']}</h1>
                         </TitleContainer>
                         <WeekContainer>
-                            <FontAwesomeIcon size="2x" icon={faChevronLeft}/>
-                            <WeekSpan><h2>Week 1 : HTML,CSS</h2></WeekSpan>
-                            <FontAwesomeIcon size="2x" icon={faChevronRight}/>
+                            <FontAwesomeIcon size="2x" icon={faChevronLeft} onClick={onLastWeek}/>
+                            <WeekSpan><h2>Week {week}</h2></WeekSpan>
+                            <FontAwesomeIcon size="2x" icon={faChevronRight} onClick={onNextWeek}/>
                         </WeekContainer>
                         <StatusWrapper>
                             <StatusContainer>
                                 <LeftStatusContainer>
                                     <TableHeaderContainer>
+                                        <TableHeader><h3></h3></TableHeader>
+                                        <TableHeader><h3></h3></TableHeader>
                                         <TableHeader><h3>과제</h3></TableHeader>
                                         <TableHeader><h3>출석</h3></TableHeader>
                                         <TableHeader><h3>강의</h3></TableHeader>
+                                        <TableHeader><h3>모두 체크</h3></TableHeader>
                                     </TableHeaderContainer>
                                     {!isLogIn ? (
                                             <div>
@@ -204,21 +240,16 @@ function Team(props) {
                                             {!loading ? (
                                                 <div>
                                                     {users.map((item, index) => (
-                                                        <Status name={item.name} key={index}/>
+                                                        <Status name={item.name} userId={item.id} key={index}
+                                                                teamName={props.match.params['name']} week={week}
+                                                                email={item.email}
+                                                                score={teamScores}/>
                                                     ))}
                                                 </div>
                                             ) : <CircularProgress/>}
                                         </div>
                                     }
                                 </LeftStatusContainer>
-                                {/*<RightStatusContainer>*/}
-                                {/*    <RightTableHeaderContainer>*/}
-                                {/*        <h3>추가점수</h3>*/}
-                                {/*    </RightTableHeaderContainer>*/}
-                                {/*    <AdditionPointContainer>*/}
-                                {/*        <Button>2</Button>*/}
-                                {/*    </AdditionPointContainer>*/}
-                                {/*</RightStatusContainer>*/}
                             </StatusContainer>
                         </StatusWrapper>
                         <SubmitContainer>
@@ -233,4 +264,4 @@ function Team(props) {
     );
 }
 
-export default Team;
+export default React.memo(Team);
