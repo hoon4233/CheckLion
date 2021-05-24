@@ -115,17 +115,21 @@ const AddPoint = () => {
     }
 
     const postAddPint = async () => {
+
         let tempInputs = new Set(Object.values(inputs));
-        if (Object.values(inputs).length !== tempInputs.size) {
+        console.log(Object.values(inputs), tempInputs);
+        if (Object.values(inputs).length !== tempInputs.size && !tempInputs.has(null)) {
             alert('중복 선택 된 팀이 있습니다.')
+        } else {
+            await addPointApi.postAddPoint(getToken(), inputs).then(res => {
+                alert('저장 완료!')
+            }).catch(e => {
+                console.log(e.response);
+                setError(e.response.data)
+            })
         }
 
-        await addPointApi.postAddPoint(getToken(), inputs).then(res => {
-            alert('저장 완료!')
-        }).catch(e => {
-            console.log(e.response);
-            setError(e.response.data)
-        })
+
     }
 
     useEffect(() => {
