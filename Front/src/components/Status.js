@@ -58,7 +58,7 @@ function Status({userId, name, score, teamName, week, email, handleScoreData}) {
             setAttendance(targetUserScore.attendance);
             setLecture(targetUserScore.lecture);
         }
-    }, [targetUserScore]);
+    }, [week, targetUserScore]);
 
 
     // 반복되는 코드긴 한데
