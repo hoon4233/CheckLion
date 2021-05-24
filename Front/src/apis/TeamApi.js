@@ -56,6 +56,20 @@ export const teamListApi = {
         })
 }
 
+export const addPointApi = {
+    postAddPoint: (token, inputs) =>
+        api.post('/member/addpoint/', {
+            week: inputs.week,
+            first_team: inputs.first_team,
+            second_team: inputs.second_team,
+            third_team: inputs.third_team
+        }, {
+            headers: {
+                Authorization: 'Token ' + token
+            }
+        })
+}
+
 export const usersOfTeamAPi = {
     getUsers: (token, teamName) =>
         api.get('/member/' + teamName + '/users/', {

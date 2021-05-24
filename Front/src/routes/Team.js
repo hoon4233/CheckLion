@@ -8,7 +8,7 @@ import '../App.css';
 import {scoreCreateApi, teamScoreOfWeekApi, usersOfTeamAPi} from "../apis/TeamApi";
 import {getToken} from "../modules/auth";
 import {CircularProgress} from "@material-ui/core";
-import {weekOfToday} from "../modules/date";
+import {today, weekOfToday} from "../modules/date";
 
 const InnerContainer = styled.div`
   width: 100%;
