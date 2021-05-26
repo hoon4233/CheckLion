@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from "react";
+import React from "react";
 import {BrowserRouter, Route, Switch} from "react-router-dom";
 import Home from "./routes/Home";
 import Landing from "./routes/Landing";
@@ -8,7 +8,7 @@ import Teamselect from "./routes/Teamselect";
 import './App.css';
 import Registration from "./routes/Registration";
 import AddPoint from "./routes/AddPoint";
-import {today, weekOfToday} from "./modules/date";
+import ChangePassword from "./routes/ChangePassword";
 
 
 function App() {
@@ -22,6 +22,7 @@ function App() {
       <Route path="/teams" exact component={Teamselect} />
       <Route path="/teams/:name" exact component={Team} />
       <Route path="/addPoint" exact component={AddPoint} />
+      <Route path="/changPW" exact component={ChangePassword} />
     </Switch>
 
   </BrowserRouter>

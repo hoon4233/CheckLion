@@ -152,7 +152,7 @@ const Sidebar = ({isLogin, name, width, height, children}) => {
                     }}>
                     <Content>
                         <UserInfo>
-                            {isLogin ? "환영합니다 " + name + "님!" : "로그인해주세요"}
+                            {isLogin ? "환영합니다 " : "로그인해주세요"}
                         </UserInfo>
                         {isLogin ?
                             <Menu>
@@ -160,30 +160,13 @@ const Sidebar = ({isLogin, name, width, height, children}) => {
                                 <Link to="/home"><MenuList>Ranking</MenuList></Link>
                                 <Link to="/teams"><MenuList>Team</MenuList></Link>
                                 <Link to="/addPoint"><MenuList>ADD POINT</MenuList></Link>
+                                <Link to="/changPW"><MenuList>CHANGE PW</MenuList></Link>
 
                             </Menu>
                             : <Menu>
                                 <Link to="/login"><MenuList>Login</MenuList></Link>
                                 <Link to="/registration"><MenuList>registration</MenuList></Link>
                             </Menu>}
-
-                        {/*{isLogin ?*/}
-                        {/*    <div>*/}
-                        {/*        <Menu>*/}
-                        {/*            <Link to="/home"><MenuList>Ranking</MenuList></Link>*/}
-                        {/*            <Link to="/teamselect"><MenuList>Team</MenuList></Link>*/}
-                        {/*        </Menu>*/}
-                        {/*        <Logout>*/}
-                        {/*            <LogoutContent*/}
-                        {/*                onClick={() => toggleMenu()}>*/}
-                        {/*                <FontAwesomeIcon icon={faSignOutAlt} rotation={180}/>*/}
-                        {/*                <LogoutLetter>logout</LogoutLetter>*/}
-                        {/*            </LogoutContent>*/}
-                        {/*        </Logout>*/}
-                        {/*    </div>*/}
-                        {/*    : <Menu>*/}
-                        {/*        <Link to="/login"><MenuList>Login</MenuList></Link>*/}
-                        {/*    </Menu>}*/}
                     </Content>
                 </Navi>
                 <BodyContainer>

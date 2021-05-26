@@ -30,3 +30,15 @@ export const registrationApi = {
             password2: conPassword
         })
 }
+
+export const changePwApi = {
+    changePw: (token, inputs) =>
+        api.post('/member/pwchange/', {
+            new_password1: inputs.pw1,
+            new_password2: inputs.pw2
+        }, {
+            headers: {
+                Authorization: 'Token ' + token,
+            }
+        })
+}
