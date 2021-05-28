@@ -208,13 +208,12 @@ function Team(props) {
 
     // 주차 바뀌면 팀 점수 해당 주차에 맞게 가져오기
     useEffect(() => {
-        fetchTeamScore()
+        fetchTeamScore();
 
     }, [week]);
 
     // 데이터 포스트용 임시 데이터 생성
     useEffect(() => {
-        setData([]);
         tempData = [];
         if (teamScores !== null && teamScores.length < 1 && users !== null) {
             for (let i = 0; i < users.length; i++) {
@@ -226,11 +225,10 @@ function Team(props) {
                     lecture: false
                 })
             }
-
         }
         setData(tempData);
 
-    }, [teamScores, week])
+    }, [teamScores, users])
 
 
     // 1주차 밑, 오늘 날짜 주차보다 위로 못가게
@@ -264,7 +262,7 @@ function Team(props) {
     }
 
     // 점수 정보 보내기
-    const postTeamScore = async () =>{
+    const postTeamScore = async () => {
         await scoreCreateApi.postScore(getToken(), props.match.params['name'], data).then(res => {
             alert('저장 완료!')
             window.location.reload();
@@ -273,6 +271,7 @@ function Team(props) {
         });
     }
 
+    if (scoreLoading) return null;
 
     return (
         <div className="Team">
