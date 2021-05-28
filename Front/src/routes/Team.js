@@ -230,7 +230,7 @@ function Team(props) {
         }
         setData(tempData);
 
-    }, [teamScores])
+    }, [teamScores, week])
 
 
     // 1주차 밑, 오늘 날짜 주차보다 위로 못가게
