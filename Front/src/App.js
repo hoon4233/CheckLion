@@ -6,6 +6,9 @@ import Login from "./routes/Login";
 import Team from "./routes/Team";
 import Teamselect from "./routes/Teamselect";
 import './App.css';
+import Registration from "./routes/Registration";
+import AddPoint from "./routes/AddPoint";
+import ChangePassword from "./routes/ChangePassword";
 
 
 function App() {
@@ -15,8 +18,11 @@ function App() {
       <Route path="/" exact component={Landing} />
       <Route path="/home" exact component={Home} />
       <Route path="/login" exact component={Login} />
-      <Route path="/teamselect" exact component={Teamselect} />
-      <Route path="/team" exact component={Team} />
+      <Route path="/registration" exact component={Registration} />
+      <Route path="/teams" exact component={Teamselect} />
+      <Route path="/teams/:name" exact component={Team} />
+      <Route path="/addPoint" exact component={AddPoint} />
+      <Route path="/changPW" exact component={ChangePassword} />
     </Switch>
 
   </BrowserRouter>

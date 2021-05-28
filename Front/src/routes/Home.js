@@ -1,19 +1,10 @@
-import React from "react";
-import { Link } from 'react-router-dom';
-import Background from "../components/Background";
-import logo from '../logo.png';
+import React, {useEffect, useState} from "react";
 import styled from 'styled-components';
-import Ranking from '../components/Ranking';
 import Sidebar from '../components/Sidebar';
 import RankingItem from '../components/RankingItem';
-
-// const numbers = [1, 2, 3, 4, 5, 6, 7]
-// const Teams = ['코딩을 하지로', '왕십리온', '강남사자', '야수의 심장', '건멋', 'NESI', 'Y1K3']
-// const points = [42, 37, 34, 32, 26, 21, 17]
-
-// const Team = {
-
-// }
+import {rankingApi} from "../apis/TeamApi";
+import {CircularProgress} from "@material-ui/core";
+import {getToken} from "../modules/auth";
 
 const Title = styled.p`
   font-size: 1.85rem;
@@ -62,29 +53,67 @@ const Button = styled.button`
     color: #ff9e1b;
   }
 `;
+const LoginMsg = styled.div`
+  font-size: 25px;
+  text-align: center;
+  font-family: 'S-CoreDream-3Light';
+`;
+
 
 function Home() {
-  return (
-    <div>
-      <Sidebar login={false} width={300} height={"100vh"} name="관리자">
-      <Container>
-        <Title>Ranking</Title>
-        <RankingContainer>
-          <RankingItem rank={'순위'} name={"팀명"} score={"점수"}></RankingItem>
-          <hr style={{width: '600px'}}></hr>
-          <RankingItem rank={1} name={'코딩을 하지로'} score={42}></RankingItem>
-          <RankingItem rank={2} name={'왕십리온'} score={37}></RankingItem>
-          <RankingItem rank={3} name={'강남사자'} score={42}></RankingItem>
-          <RankingItem rank={4} name={'야수의 심장'} score={42}></RankingItem>
-          <RankingItem rank={5} name={'건멋'} score={42}></RankingItem>
-          <RankingItem rank={6} name={'NESI'} score={42}></RankingItem>
-          <RankingItem rank={7} name={'Y1K3'} score={42}></RankingItem>
-        </RankingContainer>
-      </Container> 
-      </Sidebar>
-    </div>
-  );
-  
+    const [rankings, setRankings] = useState(null);
+    const [isLogIn, setIsLogIn] = useState(true);
+    const [loading, setLoading] = useState(true);
+
+
+    const fetchRanking = async () => {
+        setLoading(true);
+        await rankingApi.getRanking(getToken()).then((res) => {
+                setRankings(res.data);
+                setIsLogIn(true);
+                setLoading(false);
+            }
+        ).catch(e => {
+            setIsLogIn(false);
+            localStorage.removeItem('checkLionAuth');
+        });
+    }
+
+    useEffect(() => {
+        fetchRanking();
+    }, []);
+
+    return (
+        <div>
+            <Sidebar isLogin={isLogIn} width={300} height={"100vh"} name="관리자">
+                <Container>
+                    <Title>Ranking</Title>
+                    <RankingContainer>
+                        <RankingItem rank={'순위'} name={"팀명"} score={"점수"}/>
+                        <hr style={{width: '600px'}}/>
+                        {!isLogIn ? (
+                            <LoginMsg>
+                                <p>로그인 후 이용해 주세요.</p>
+                            </LoginMsg>) :
+                            <div>
+                                {!loading ? (
+                                    <div>
+                                        {rankings.map((item, index) => (
+                                            <RankingItem rank={index + 1} name={item.name} score={item.total_point}/>
+                                        ))}
+                                    </div>
+
+
+                                ) : <CircularProgress/>}
+                            </div>
+                        }
+
+                    </RankingContainer>
+                </Container>
+            </Sidebar>
+        </div>
+    );
+
 }
 
 export default Home;

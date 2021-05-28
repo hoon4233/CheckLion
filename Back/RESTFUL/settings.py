@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-50iar5-1#cn2&jo43bv#1y^vp)@aq#t)vdk81)0jf7rzb6r2-=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -49,7 +49,9 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'rest_auth.registration',
 
-    'Member'
+    'Member',
+
+    'corsheaders' #CORS 에러 해결
 ]
 
 MIDDLEWARE = [
@@ -60,6 +62,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware'#CORS 에러 해결
 ]
 
 ROOT_URLCONF = 'RESTFUL.urls'
@@ -173,3 +176,9 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # EMAIL_PORT = 587
 # EMAIL_USE_TLS = True
 # DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:3000',
+    'http://127.0.0.1:3000'
+)
