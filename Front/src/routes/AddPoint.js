@@ -122,6 +122,14 @@ const AddPoint = () => {
             alert('중복 선택 된 팀이 있습니다.')
         } else {
             await addPointApi.postAddPoint(getToken(), inputs).then(res => {
+                setError(null);
+                setInputs({
+                        week: weekOfToday,
+                        first_team: null,
+                        second_team: null,
+                        third_team: null
+                    }
+                )
                 alert('저장 완료!')
             }).catch(e => {
                 console.log(e.response);
