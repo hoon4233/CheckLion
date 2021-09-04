@@ -5,6 +5,7 @@ CheckLion
 --------
 ## [Back(Django) -](https://github.com/hoon4233/CheckLion/tree/master/Back) [hoon4233](https://github.com/hoon4233)
 ## [Front(React) -](https://github.com/hoon4233/CheckLion/tree/master/Front) [YiGeon](https://github.com/YiGeon)
+## Desing - [Sukyeong-hyu](https://github.com/Sukyeong-hyu)
 
 
 
